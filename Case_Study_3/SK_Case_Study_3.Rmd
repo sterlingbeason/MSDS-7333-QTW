@@ -1,0 +1,12 @@
+---
+title: 'Lab 3: QTW'
+author: "Sean Kennedy"
+date: "6/11/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::knit_engines$set(python = reticulate::eng_python)
+```
+

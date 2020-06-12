@@ -7,15 +7,14 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 library(reticulate)
+library(tidyverse)
 knitr::opts_chunk$set(echo = TRUE)
 knitr::knit_engines$set(python = eng_python)
 use_python('/usr/local/bin/python3')
 ```
 
 ```{r}
-
-
-
+load('./Data/data.Rda')
 ```
 
 ```{python}
@@ -26,4 +25,22 @@ from sklearn.metrics import accuracy_score
 
 # Recommended Installation: 'conda install python-graphviz' (should add 'graphviz' to PATH)
 from graphviz import Source
+import pandas as pd
+```
+
+```{python DATA_CLEANUP}
+#print(r.r_data.head())
+df = r.emailDFrp
+type(df)
+df.info()
+```
+
+```{python}
+df.isna().any()
+```
+
+```{python IMPUTION}
+
+
+
 ```

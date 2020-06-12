@@ -6,7 +6,24 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
+library(reticulate)
 knitr::opts_chunk$set(echo = TRUE)
-knitr::knit_engines$set(python = reticulate::eng_python)
+knitr::knit_engines$set(python = eng_python)
+use_python('/usr/local/bin/python3')
 ```
 
+```{r}
+
+
+
+```
+
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, export_graphviz
+from sklearn import tree
+from sklearn.metrics import accuracy_score
+
+# Recommended Installation: 'conda install python-graphviz' (should add 'graphviz' to PATH)
+from graphviz import Source
+```

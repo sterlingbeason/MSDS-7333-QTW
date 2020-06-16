@@ -1,0 +1,243 @@
+---
+title: 'Lab 3: QTW'
+author: "Sean Kennedy"
+date: "6/11/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(reticulate)
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::knit_engines$set(python = eng_python)
+use_python('/usr/local/bin/python3')
+```
+
+```{r}
+load('./Data/data.Rda')
+```
+
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, export_graphviz
+from sklearn import tree
+from sklearn.metrics import accuracy_score
+
+# Recommended Installation: 'conda install python-graphviz' (should add 'graphviz' to PATH)
+from graphviz import Source
+import pandas as pd
+
+import seaborn as sns
+```
+
+### Data Dictionary
+
+```{python DATA_CLEANUP}
+df = r.emailDFrp
+df.info()
+```
+
+```{python}
+df.describe()
+
+```
+
+```{python}
+df.columns[df.isna().any() == True]
+```
+
+
+```{python}
+df.subSpamWords.unique()
+```
+
+This is just a boolean parameter, let's check the frequency distribution.
+
+```{python}
+spam_na = df[df.subSpamWords.isna()]
+group_by_spam = df.groupby(['subSpamWords', 'isSpam']).count().reset_index().rename(columns={'isRe':'Count'})
+p1 = sns.barplot(data = group_by_spam, x='subSpamWords', y='Count', hue='isSpam')
+p1.set_title('Sub Spam Words vs Is Spam')
+p1.set_yticklabels([f'{y:,.0f}' for y in p1.get_yticks()])
+p1
+
+```
+
+```{python}
+group_by_spam.groupby(['subSpamWords', 'isSpam'])['Count'].sum()
+
+```
+
+
+```{python}
+p2 = sns.barplot(data = spam_na.groupby(['isSpam']).count().reset_index().rename(columns={'isRe':'Count'}), x='isSpam', y='Count')
+p2.set_title('subSpamWords == N/A vs isSpam')
+y_ticklabels = [f'{y:,.0f}' for y in p2.get_yticks()]
+p2.set_yticklabels(y_ticklabels)
+p2
+```
+
+```{python}
+spam_na.groupby(['isSpam'])['isRe'].count()
+
+```
+
+From the above, we can see that the ratio of non-spam emails vs. spam emails is higher when **subSpamWords** is False It is the opposite for the case where **subSpamWords** is True. Since each of these emails have been classified as not spam, we can safely assume that these are most likely should be imputed to our **False** class for **subSpamWords**. There are 7 observations for this particular field being N/A, so the effect overall of any imputation is likely minimal, at best.
+
+
+***noHost***
+
+```{python}
+df.noHost.unique()
+```
+
+Again, this is just a boolean parameter, let's check the frequency distribution.
+
+
+```{python}
+host_na = df[df.noHost.isna()]
+group_by_host = df.groupby(['noHost', 'isSpam']).count().reset_index().rename(columns={'isRe':'Count'})
+p1 = sns.barplot(data = group_by_host, x='noHost', y='Count', hue='isSpam')
+p1.set_title('No Host vs Is Spam')
+p1.set_yticklabels([f'{y:,.0f}' for y in p1.get_yticks()])
+p1
+
+```
+
+```{python}
+group_by_host.groupby(['noHost', 'isSpam'])['Count'].sum()
+
+```
+
+```{python}
+p2 = sns.barplot(data = host_na.groupby(['isSpam']).count().reset_index().rename(columns={'isRe':'Count'}), x='isSpam', y='Count')
+p2.set_title('noHost == N/A vs isSpam')
+y_ticklabels = [f'{y:,.0f}' for y in p2.get_yticks()]
+p2.set_yticklabels(y_ticklabels)
+p2
+```
+
+```{python}
+host_na.groupby(['isSpam'])['isRe'].count()
+```
+
+In this case, the **noHost** field only has one N/A, so its impact is negligable - given the observed distribution of this field (strongly tilted towards the **True** class) - it's highly unlikely that this field would e false to begin with, regardless of its classification as spam or not. Hence, we'll impute this value to **True**. 
+
+***isYelling***
+
+```{python}
+yelling_na = df[df.isYelling.isna()]
+group_by_yelling = df.groupby(['isYelling', 'isSpam']).count().reset_index().rename(columns={'isRe':'Count'})
+p1 = sns.barplot(data = group_by_yelling, x='isYelling', y='Count', hue='isSpam')
+p1.set_title('Is Yelling vs Is Spam')
+p1.set_yticklabels([f'{y:,.0f}' for y in p1.get_yticks()])
+p1
+
+```
+
+```{python}
+group_by_yelling.groupby(['isYelling', 'isSpam'])['Count'].sum()
+
+```
+
+
+```{python}
+p2 = sns.barplot(data = yelling_na.groupby(['isSpam']).count().reset_index().rename(columns={'isRe':'Count'}), x='isSpam', y='Count')
+p2.set_title('isYelling == N/A vs isSpam')
+y_ticklabels = [f'{y:,.0f}' for y in p2.get_yticks()]
+p2.set_yticklabels(y_ticklabels)
+p2
+```
+
+```{python}
+yelling_na.groupby(['isSpam'])['isRe'].count()
+```
+
+From the above, we can see that the ratio of non-spam emails vs. spam emails is higher when **isYelling** is False. It is the opposite for the case where **isYelling** is True, nearly all of those observations were spam emails. Since each of these emails have been classified as not spam, we can safely assume that these should be imputed to our **False** class for **isYelling**. There are 7 observations for this particular field being N/A, so the effect overall of any imputation is likely minimal, at best.
+
+***subBlanks***
+
+
+```{python}
+df[df.subBlanks.isna()].groupby(['isSpam'])[['isRe']].count().rename(columns={'isRe':'Count'})
+```
+
+```{python sub_blanks_distribution}
+not_na = df[~df.subBlanks.isna()]['subBlanks']
+not_na.hist()
+
+###Page 151 of text is 
+```
+```{python}
+not_na.describe()
+print(f'Median = {round(not_na.median(), 4)}')
+```
+
+```{python sub_blanks_distribution_spam}
+true_na = df[(~df.subBlanks.isna())
+& (df.isSpam == 'T')
+]['subBlanks']
+true_na.hist()
+```
+
+```{python sub_blanks_distribution_spam}
+false_na = df[(~df.subBlanks.isna())
+& (df.isSpam == 'F')
+]['subBlanks']
+false_na.hist()
+```
+
+```{python}
+df.subBlanks.unique()
+```
+
+```{python sub_blanks_distribution_spam}
+true_na.describe()
+print(true_na.median())
+```
+
+
+
+### Data Partitioning
+
+```{python}
+
+df = df.dropna() # TODO: Impute NAs, don't drop them
+
+features = df[df.columns.difference(['isSpam'])]
+
+X = pd.get_dummies(features, drop_first=True)
+y = df['isSpam']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=7333)
+
+```
+
+### Modeling - Decision Tree
+
+```{python}
+
+clf = DecisionTreeClassifier(random_state=7333)
+clf.fit(X_train, y_train)
+
+pred = clf.predict(X_test)
+
+# Accuracy
+accuracy_score(y_test, pred)
+
+```
+
+
+```{python}
+#X_test.columns
+y_test.index
+```
+
+
+
+```{python}
+
+graph = Source(tree.export_graphviz(clf, feature_names=X.columns, class_names=['spam', 'ham'], filled = True))
+
+
+```

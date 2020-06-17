@@ -1,0 +1,31 @@
+| Variable | Type | Description |
+| - | - | - |
+| isRe | logical | TRUE ifRe:appears at the start of the subject. | 
+| numLines | integer | Number of lines in the body of the message. | 
+| bodyCharCt | integer | Number of characters in the body of the message. | 
+| underscore | logical | TRUE if email address in theFromfield of the headercontains an underscore. | 
+| subExcCt | integer | Number of exclamation marks in the subject. | 
+| subQuesCt | integer | Number of question marks in the subject. | 
+| numAtt | integer | Number of attachments in the message. | 
+| priority | logical | TRUE if aPrioritykey is present in the header. | 
+| numRec | numeric | Number of recipients of the message, including CCs. | 
+| perCaps | numeric | Percentage of capitals among all letters in the messagebody, excluding attachments. | 
+| isInReplyTo | logical | TRUE if theIn-Reply-Tokey is present in the header. | 
+| sortedRec | logical | TRUE if the recipients’ email addresses are sorted. | 
+| subPunc | logical | TRUE if words in the subject have punctuation or num-bers embedded in them, e.g.,w!se. | 
+| hour | numeric | Hour of the day in theDatefield. | 
+| multipartText | logical | TRUE if the MIME type is multipart/text. | 
+| hasImages | logical | TRUE if the message contains images. | 
+| isPGPsigned | logical | TRUE if the message contains a PGP signature. | 
+| perHTML | numeric | Percentage of characters inHTMLtags in the messagebody in comparison to all characters. | 
+| subSpamWords | logical | TRUE if the subject contains one of the words in a spamword vector. | 
+| subBlanks | numeric | Percentage of blanks in the subject. | 
+| noHost | logical | TRUE if there is no hostname in theMessage-Idkey inthe header. | 
+| numEnd | logical | TRUE if the email sender’s address (before the @) endsin a number. | 
+| isYelling | logical | TRUE if the subject is all capital letters. | 
+| forwards | numeric | Number of forward symbols in a line of the body, e.g.,>>> xxxcontains 3 forwards. | 
+| isOrigMsg | logical | TRUE if the message body contains the phraseoriginalmessage. | 
+| isDear | logical | TRUE if the message body contains the worddear. | 
+| isWrote | logical | TRUE if the message contains the phrasewrote:. | 
+| avgWordLen | numeric | The average length of the words in a message. | 
+| numDlr | numeric | Number of dollar signs in the message body. | 

@@ -1,0 +1,6 @@
+"*Beginning for the 2015-16 season, reports from public health and clinical laboratories are presented separately in the weekly influenza update, FluView.  Data presented from public health laboratories include the weekly total number of specimens tested, the number of positive influenza tests, and the number by influenza virus type, subtype, and influenza B lineage."
+REGION TYPE,REGION,SEASON_DESCRIPTION,TOTAL SPECIMENS,A (2009 H1N1),A (H3),A (Subtyping not Performed),B,BVic,BYam,H3N2v
+States,Alabama,Season 2016-17,570,3,227,1,2,15,14,0
+States,Texas,Season 2016-17,1713,49,397,5,51,35,115,0
+States,Alabama,Season 2019-20,670,173,6,0,5,123,0,0
+States,Texas,Season 2019-20,2784,542,23,12,238,182,0,0

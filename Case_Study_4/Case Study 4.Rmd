@@ -1,0 +1,41 @@
+---
+title: 'Lab 4: QTW'
+author: "Sean Kennedy"
+date: "6/11/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(reticulate)
+library(tidyverse)
+library(tswge)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::knit_engines$set(python = eng_python)
+use_python('/usr/local/bin/python3')
+```
+
+
+```{r}
+df_ph = read_csv('FluNetInteractiveReport.csv')
+df_ph$Country = factor(df_ph$Country)
+df_ph$WHOREGION = factor(df_ph$WHOREGION)
+
+
+#plotts.sample.wge(df_ph$`PERCENT POSITIVE`)
+#pacf(df_ph$`PERCENT POSITIVE`)
+#aic5.wge(df_ph$`PERCENT POSITIVE`)
+
+# 5 week periodicity?
+```
+
+```{r}
+
+plotts.sample.wge(df_ph$`PERCENT A`)
+pacf(df_ph$`PERCENT A`)
+```
+
+```{r}
+plotts.sample.wge(df_ph$`PERCENT B`)
+pacf(df_ph$`PERCENT B`)
+
+```

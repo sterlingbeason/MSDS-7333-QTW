@@ -3,3 +3,4 @@
 .Rhistory
 **/*.html
 !notebook_final.html
+**/HIGGS.csv
